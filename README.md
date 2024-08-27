@@ -1,9 +1,8 @@
-# 🦜️🔗 LangChain {partner}
+# 🦜️🔗 LangChain Databricks
 
-This repository contains {n} packages with {partner} integrations with LangChain:
+This repository contains 1 package with Databricks integrations with LangChain:
 
-- [langchain-{package}](https://pypi.org/project/langchain-{package}/) integrates [{product}}]({product_link}).
-{- ... if more packages}
+- [langchain-databricks](https://pypi.org/project/langchain-databricks/)
 
 ## Initial Repo Checklist (Remove this section after completing)
 
@@ -12,7 +11,6 @@ see [these docs](https://python.langchain.com/docs/contributing/integrations#par
 
 Code
 
-- [ ] Fill out the readme above (for folks that follow pypi link)
 - [ ] Copy package into /libs folder
 - [ ] Update these fields in /libs/*/pyproject.toml
 
