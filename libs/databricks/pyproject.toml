@@ -4,12 +4,12 @@ version = "0.1.0"
 description = "An integration package connecting Databricks and LangChain"
 authors = []
 readme = "README.md"
-repository = "https://github.com/langchain-ai/langchain"
+repository = "https://github.com/langchain-ai/langchain-databricks"
 license = "MIT"
 
 [tool.poetry.urls]
-"Source Code" = "https://github.com/langchain-ai/langchain/tree/master/libs/partners/databricks"
-"Release Notes" = "https://github.com/langchain-ai/langchain/releases?q=tag%3A%22databricks%3D%3D0%22&expanded=true"
+"Source Code" = "https://github.com/langchain-ai/langchain-databricks/tree/main/libs/databricks"
+"Release Notes" = "https://github.com/langchain-ai/langchain-databricks/releases"
 
 [tool.poetry.dependencies]
 # TODO: Replace <3.12 to <4.0 once https://github.com/mlflow/mlflow/commit/04370119fcc1b2ccdbcd9a50198ab00566d58cd2 is released
@@ -19,12 +19,12 @@ mlflow = ">=2.9"
 
 # MLflow depends on following libraries, which require different version for Python 3.8 vs 3.12
 numpy = [
-    {version = ">=1.26.0", python = ">=3.12"},
-    {version = ">=1.24.0", python = "<3.12"},
+  { version = ">=1.26.0", python = ">=3.12" },
+  { version = ">=1.24.0", python = "<3.12" },
 ]
 scipy = [
-    {version = ">=1.11", python = ">=3.12"},
-    {version = "<2", python = "<3.12"}
+  { version = ">=1.11", python = ">=3.12" },
+  { version = "<2", python = "<3.12" },
 ]
 databricks-vectorsearch = "^0.40"
 

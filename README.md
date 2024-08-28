@@ -9,14 +9,6 @@ This repository contains 1 package with Databricks integrations with LangChain:
 This setup assumes that the partner package is already split. For those instructions,
 see [these docs](https://python.langchain.com/docs/contributing/integrations#partner-packages).
 
-Code
-
-- [ ] Copy package into /libs folder
-- [ ] Update these fields in /libs/*/pyproject.toml
-
-    - `tool.poetry.repository`
-    - `tool.poetry.urls["Source Code"]`
-
 Workflow code
 
 - [ ] Add secrets as env vars in .github/workflows/_release.yml
