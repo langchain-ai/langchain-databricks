@@ -9,12 +9,6 @@ This repository contains 1 package with Databricks integrations with LangChain:
 This setup assumes that the partner package is already split. For those instructions,
 see [these docs](https://python.langchain.com/docs/contributing/integrations#partner-packages).
 
-Workflow code
-
-- [ ] Add secrets as env vars in .github/workflows/_release.yml
-- [ ] Populate .github/workflows/_release.yml with `on.workflow_dispatch.inputs.working-directory.default`
-- [ ] Configure `LIB_DIRS` in .github/scripts/check_diff.py
-
 In github
 
 - [ ] Add integration testing secrets in Github (ask Erick for help)
