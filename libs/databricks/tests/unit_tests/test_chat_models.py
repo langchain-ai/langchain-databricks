@@ -159,7 +159,14 @@ def llm() -> ChatDatabricks:
     )
 
 
-def test_chat_mlflow_predict(llm: ChatDatabricks) -> None:
+def test_dict(llm: ChatDatabricks) -> None:
+    d = llm.dict()
+    assert d["_type"] == "chat-databricks"
+    assert d["endpoint"] == "databricks-meta-llama-3-70b-instruct"
+    assert d["target_uri"] == "databricks"
+
+
+def test_chat_model_predict(llm: ChatDatabricks) -> None:
     res = llm.invoke(
         [
             {"role": "system", "content": "You are a helpful assistant."},
@@ -169,7 +176,7 @@ def test_chat_mlflow_predict(llm: ChatDatabricks) -> None:
     assert res.content == _MOCK_CHAT_RESPONSE["choices"][0]["message"]["content"]  # type: ignore[index]
 
 
-def test_chat_mlflow_stream(llm: ChatDatabricks) -> None:
+def test_chat_model_stream(llm: ChatDatabricks) -> None:
     res = llm.stream(
         [
             {"role": "system", "content": "You are a helpful assistant."},
@@ -180,7 +187,7 @@ def test_chat_mlflow_stream(llm: ChatDatabricks) -> None:
         assert chunk.content == expected["choices"][0]["delta"]["content"]  # type: ignore[index]
 
 
-def test_chat_mlflow_bind_tools(llm: ChatDatabricks) -> None:
+def test_chat_model_bind_tools(llm: ChatDatabricks) -> None:
     class GetWeather(BaseModel):
         """Get the current weather in a given location"""
 
