@@ -394,6 +394,19 @@ class ChatDatabricks(BaseChatModel):
         return super().bind(tools=formatted_tools, **kwargs)
 
     @property
+    def _identifying_params(self) -> Dict[str, Any]:
+        return self._default_params
+
+    def _get_invocation_params(
+        self, stop: Optional[List[str]] = None, **kwargs: Any
+    ) -> Dict[str, Any]:
+        """Get the parameters used to invoke the model FOR THE CALLBACKS."""
+        return {
+            **self._default_params,
+            **super()._get_invocation_params(stop=stop, **kwargs),
+        }
+
+    @property
     def _llm_type(self) -> str:
         """Return type of chat model."""
         return "chat-databricks"
