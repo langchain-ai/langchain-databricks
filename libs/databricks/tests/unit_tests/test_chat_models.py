@@ -276,6 +276,7 @@ def test_convert_message_with_tool_calls() -> None:
 
     # convert back
     dict_result = _convert_message_to_dict(result)
+    message_with_tools.pop("id")  # id is not propagated
     assert dict_result == message_with_tools
 
 
@@ -329,6 +330,7 @@ def test_convert_tool_message_chunk() -> None:
 
     # convert back
     dict_result = _convert_message_to_dict(result)
+    delta.pop("id")  # id is not propagated
     assert dict_result == delta
 
 
