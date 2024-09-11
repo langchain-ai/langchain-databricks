@@ -422,9 +422,6 @@ def _convert_message_to_dict(message: BaseMessage) -> dict:
     if (name := message.name or message.additional_kwargs.get("name")) is not None:
         message_dict["name"] = name
 
-    if id := message.id:
-        message_dict["id"] = id
-
     if isinstance(message, ChatMessage):
         return {"role": message.role, **message_dict}
     elif isinstance(message, HumanMessage):

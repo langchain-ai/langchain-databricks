@@ -231,6 +231,15 @@ def test_convert_message(role: str, expected_output: BaseMessage) -> None:
     assert dict_result == message
 
 
+def test_convert_message_not_propagate_id() -> None:
+    # The AIMessage returned by the model endpoint can contain "id" field,
+    # but it is not always supported for requests. Therefore, we should not
+    # propagate it to the request payload.
+    message = AIMessage(content="foo", id="some-id")
+    result = _convert_message_to_dict(message)
+    assert result == {"role": "assistant", "content": "foo"}
+
+
 def test_convert_message_with_tool_calls() -> None:
     ID = "call_fb5f5e1a-bac0-4422-95e9-d06e6022ad12"
     tool_calls = [
