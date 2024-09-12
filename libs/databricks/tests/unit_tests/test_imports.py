@@ -1,8 +1,8 @@
 from langchain_databricks import __all__
 
 EXPECTED_ALL = [
-    "ChatDatabricks",
-    "DatabricksEmbeddings",
+    "DatabricksChatModel",
+    "DatabricksEmbeddingModel",
     "DatabricksVectorSearch",
     "__version__",
 ]

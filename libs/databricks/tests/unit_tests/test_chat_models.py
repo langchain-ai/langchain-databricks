@@ -23,7 +23,7 @@ from langchain_core.messages.tool import ToolCallChunk
 from langchain_core.pydantic_v1 import BaseModel, Field
 
 from langchain_databricks.chat_models import (
-    ChatDatabricks,
+    DatabricksChatModel,
     _convert_dict_to_message,
     _convert_dict_to_message_chunk,
     _convert_message_to_dict,
@@ -153,20 +153,20 @@ def mock_client() -> Generator:
 
 
 @pytest.fixture
-def llm() -> ChatDatabricks:
-    return ChatDatabricks(
+def llm() -> DatabricksChatModel:
+    return DatabricksChatModel(
         endpoint="databricks-meta-llama-3-70b-instruct", target_uri="databricks"
     )
 
 
-def test_dict(llm: ChatDatabricks) -> None:
+def test_dict(llm: DatabricksChatModel) -> None:
     d = llm.dict()
     assert d["_type"] == "chat-databricks"
     assert d["endpoint"] == "databricks-meta-llama-3-70b-instruct"
     assert d["target_uri"] == "databricks"
 
 
-def test_chat_model_predict(llm: ChatDatabricks) -> None:
+def test_chat_model_predict(llm: DatabricksChatModel) -> None:
     res = llm.invoke(
         [
             {"role": "system", "content": "You are a helpful assistant."},
@@ -176,7 +176,7 @@ def test_chat_model_predict(llm: ChatDatabricks) -> None:
     assert res.content == _MOCK_CHAT_RESPONSE["choices"][0]["message"]["content"]  # type: ignore[index]
 
 
-def test_chat_model_stream(llm: ChatDatabricks) -> None:
+def test_chat_model_stream(llm: DatabricksChatModel) -> None:
     res = llm.stream(
         [
             {"role": "system", "content": "You are a helpful assistant."},
@@ -187,7 +187,7 @@ def test_chat_model_stream(llm: ChatDatabricks) -> None:
         assert chunk.content == expected["choices"][0]["delta"]["content"]  # type: ignore[index]
 
 
-def test_chat_model_bind_tools(llm: ChatDatabricks) -> None:
+def test_chat_model_bind_tools(llm: DatabricksChatModel) -> None:
     class GetWeather(BaseModel):
         """Get the current weather in a given location"""
 

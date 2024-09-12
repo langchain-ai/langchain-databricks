@@ -1,7 +1,7 @@
 from importlib import metadata
 
-from langchain_databricks.chat_models import ChatDatabricks
-from langchain_databricks.embeddings import DatabricksEmbeddings
+from langchain_databricks.chat_models import DatabricksChatModel
+from langchain_databricks.embeddings import DatabricksEmbeddingModel
 from langchain_databricks.vectorstores import DatabricksVectorSearch
 
 try:
@@ -12,8 +12,8 @@ except metadata.PackageNotFoundError:
 del metadata  # optional, avoids polluting the results of dir(__package__)
 
 __all__ = [
-    "ChatDatabricks",
-    "DatabricksEmbeddings",
+    "DatabricksChatModel",
+    "DatabricksEmbeddingModel",
     "DatabricksVectorSearch",
     "__version__",
 ]

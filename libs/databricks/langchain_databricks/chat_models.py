@@ -54,7 +54,7 @@ from langchain_databricks.utils import get_deployment_client
 logger = logging.getLogger(__name__)
 
 
-class ChatDatabricks(BaseChatModel):
+class DatabricksChatModel(BaseChatModel):
     """Databricks chat model integration.
 
     Setup:
@@ -90,8 +90,8 @@ class ChatDatabricks(BaseChatModel):
     Instantiate:
         .. code-block:: python
 
-            from langchain_databricks import ChatDatabricks
-            llm = ChatDatabricks(
+            from langchain_databricks import DatabricksChatModel
+            llm = DatabricksChatModel(
                 endpoint="databricks-meta-llama-3-1-405b-instruct",
                 temperature=0,
                 max_tokens=500,

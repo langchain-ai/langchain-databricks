@@ -14,11 +14,11 @@ And you should configure credentials by setting the following environment variab
 
 ## Chat Models
 
-`ChatDatabricks` class exposes chat models from Databricks.
+`DatabricksChatModel` class exposes chat models from Databricks.
 
 ```python
-from langchain_databricks import ChatDatabricks
+from langchain_databricks import DatabricksChatModel
 
-llm = ChatDatabricks()
+llm = DatabricksChatModel()
 llm.invoke("Sing a ballad of LangChain.")
 ```

@@ -6,7 +6,7 @@ from unittest import mock
 import pytest
 from mlflow.deployments import BaseDeploymentClient  # type: ignore[import-untyped]
 
-from langchain_databricks import DatabricksEmbeddings
+from langchain_databricks import DatabricksEmbeddingModel
 
 
 def _mock_embeddings(endpoint: str, inputs: Dict[str, Any]) -> Dict[str, Any]:
@@ -34,8 +34,8 @@ def mock_client() -> Generator:
 
 
 @pytest.fixture
-def embeddings() -> DatabricksEmbeddings:
-    return DatabricksEmbeddings(
+def embeddings() -> DatabricksEmbeddingModel:
+    return DatabricksEmbeddingModel(
         endpoint="text-embedding-3-small",
         documents_params={"fruit": "apple"},
         query_params={"fruit": "banana"},
@@ -43,7 +43,7 @@ def embeddings() -> DatabricksEmbeddings:
 
 
 def test_embed_documents(
-    mock_client: BaseDeploymentClient, embeddings: DatabricksEmbeddings
+    mock_client: BaseDeploymentClient, embeddings: DatabricksEmbeddingModel
 ) -> None:
     documents = ["foo"] * 30
     output = embeddings.embed_documents(documents)
@@ -57,7 +57,7 @@ def test_embed_documents(
 
 
 def test_embed_query(
-    mock_client: BaseDeploymentClient, embeddings: DatabricksEmbeddings
+    mock_client: BaseDeploymentClient, embeddings: DatabricksEmbeddingModel
 ) -> None:
     query = "foo bar"
     output = embeddings.embed_query(query)

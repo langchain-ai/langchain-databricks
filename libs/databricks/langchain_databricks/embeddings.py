@@ -6,7 +6,7 @@ from langchain_core.pydantic_v1 import BaseModel, PrivateAttr
 from langchain_databricks.utils import get_deployment_client
 
 
-class DatabricksEmbeddings(Embeddings, BaseModel):
+class DatabricksEmbeddingModel(Embeddings, BaseModel):
     """Databricks embedding model integration.
 
     Setup:
@@ -36,8 +36,8 @@ class DatabricksEmbeddings(Embeddings, BaseModel):
 
     Instantiate:
         .. code-block:: python
-            from langchain_databricks import DatabricksEmbeddings
-            embed = DatabricksEmbeddings(
+            from langchain_databricks import DatabricksEmbeddingModel
+            embed = DatabricksEmbeddingModel(
                 endpoint="databricks-bge-large-en",
             )
 

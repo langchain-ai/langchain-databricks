@@ -4,7 +4,7 @@ This repository provides LangChain components to connect your LangChain applicat
 
 ## Features
 
-- **🤖 LLMs**: The `ChatDatabricks` component allows you to access chat endpoints hosted on [Databricks Model Serving](https://www.databricks.com/product/model-serving), including state-of-the-art models such as Llama3, Mixtral, and DBRX, as well as your own fine-tuned models.
+- **🤖 LLMs**: The `DatabricksChatModel` component allows you to access chat endpoints hosted on [Databricks Model Serving](https://www.databricks.com/product/model-serving), including state-of-the-art models such as Llama3, Mixtral, and DBRX, as well as your own fine-tuned models.
 - **📐 Vector Store**: [Databricks Vector Search](https://www.databricks.com/product/machine-learning/vector-search) is a serverless similarity search engine that allows you to store a vector representation of your data, including metadata, in a vector database. With Vector Search, you can create auto-updating vector search indexes from Delta tables managed by Unity Catalog and query them with a simple API to return the most similar vectors.
 - **🔢 Embeddings**: Provides components for working with embedding models hosted on [Databricks Model Serving](https://www.databricks.com/product/model-serving).
 
@@ -23,9 +23,9 @@ pip install langchain-databricks
 Here's a simple example of how to use the `langchain-databricks` package.
 
 ```python
-from langchain_databricks import ChatDatabricks
+from langchain_databricks import DatabricksChatModel
 
-chat_model = ChatDatabricks(endpoint="databricks-meta-llama-3-70b-instruct")
+chat_model = DatabricksChatModel(endpoint="databricks-meta-llama-3-70b-instruct")
 
 response = chat_model.invoke("What is MLflow?")
 print(response)
@@ -37,7 +37,7 @@ For more detailed usage examples and documentation, please refer to the [LangCha
 
 We welcome contributions to this project! Please follow the following guidance to setup the project for development and start contributing.
 
-### Folk and clone the repository
+### Fork and clone the repository
 
 To contribute to this project, please follow the ["fork and pull request"](https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project) workflow. Please do not try to push directly to this repo unless you are a maintainer.
 
