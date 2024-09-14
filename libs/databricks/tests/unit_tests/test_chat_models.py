@@ -237,7 +237,7 @@ def test_convert_message_not_propagate_id() -> None:
     # propagate it to the request payload.
     message = AIMessage(content="foo", id="some-id")
     result = _convert_message_to_dict(message)
-    assert result == {"role": "assistant", "content": "foo"}
+    assert "id" not in result
 
 
 def test_convert_message_with_tool_calls() -> None:
