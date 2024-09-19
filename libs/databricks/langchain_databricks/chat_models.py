@@ -418,9 +418,11 @@ class ChatDatabricks(BaseChatModel):
 def _convert_message_to_dict(message: BaseMessage) -> dict:
     message_dict = {"content": message.content}
 
-    # OpenAI supports "name" field in messages.
-    if (name := message.name or message.additional_kwargs.get("name")) is not None:
-        message_dict["name"] = name
+    # NB: We don't propagate 'name' field from input message to the endpoint because
+    #  FMAPI doesn't support it. We should update the endpoints to be compatible with
+    #  OpenAI and then we can uncomment the following code.
+    # if (name := message.name or message.additional_kwargs.get("name")) is not None:
+    #     message_dict["name"] = name
 
     if isinstance(message, ChatMessage):
         return {"role": message.role, **message_dict}
