@@ -1,7 +1,7 @@
 from typing import Any, Dict, Iterator, List
 
 from langchain_core.embeddings import Embeddings
-from langchain_core.pydantic_v1 import BaseModel, PrivateAttr
+from pydantic import BaseModel, PrivateAttr
 
 from langchain_databricks.utils import get_deployment_client
 

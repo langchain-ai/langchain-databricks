@@ -40,14 +40,11 @@ from langchain_core.output_parsers.openai_tools import (
     parse_tool_call,
 )
 from langchain_core.outputs import ChatGeneration, ChatGenerationChunk, ChatResult
-from langchain_core.pydantic_v1 import (
-    BaseModel,
-    Field,
-    PrivateAttr,
-)
 from langchain_core.runnables import Runnable
 from langchain_core.tools import BaseTool
 from langchain_core.utils.function_calling import convert_to_openai_tool
+from mlflow.deployments import BaseDeploymentClient  # type: ignore
+from pydantic import BaseModel, Field
 
 from langchain_databricks.utils import get_deployment_client
 
@@ -180,7 +177,7 @@ class ChatDatabricks(BaseChatModel):
     Tool calling:
         .. code-block:: python
 
-            from langchain_core.pydantic_v1 import BaseModel, Field
+            from pydantic import BaseModel, Field
 
             class GetWeather(BaseModel):
                 '''Get the current weather in a given location'''
@@ -225,13 +222,16 @@ class ChatDatabricks(BaseChatModel):
     """List of strings to stop generation at."""
     max_tokens: Optional[int] = None
     """The maximum number of tokens to generate."""
-    extra_params: dict = Field(default_factory=dict)
+    extra_params: Optional[Dict[str, Any]] = None
     """Any extra parameters to pass to the endpoint."""
-    _client: Any = PrivateAttr()
+    client: Optional[BaseDeploymentClient] = Field(
+        default=None, exclude=True
+    )  #: :meta private:
 
     def __init__(self, **kwargs: Any):
         super().__init__(**kwargs)
-        self._client = get_deployment_client(self.target_uri)
+        self.client = get_deployment_client(self.target_uri)
+        self.extra_params = self.extra_params or {}
 
     @property
     def _default_params(self) -> Dict[str, Any]:
@@ -254,7 +254,7 @@ class ChatDatabricks(BaseChatModel):
         **kwargs: Any,
     ) -> ChatResult:
         data = self._prepare_inputs(messages, stop, **kwargs)
-        resp = self._client.predict(endpoint=self.endpoint, inputs=data)
+        resp = self.client.predict(endpoint=self.endpoint, inputs=data)  # type: ignore
         return self._convert_response_to_chat_result(resp)
 
     def _prepare_inputs(
@@ -267,7 +267,7 @@ class ChatDatabricks(BaseChatModel):
             "messages": [_convert_message_to_dict(msg) for msg in messages],
             "temperature": self.temperature,
             "n": self.n,
-            **self.extra_params,
+            **self.extra_params,  # type: ignore
             **kwargs,
         }
         if stop := self.stop or stop:
@@ -299,7 +299,7 @@ class ChatDatabricks(BaseChatModel):
     ) -> Iterator[ChatGenerationChunk]:
         data = self._prepare_inputs(messages, stop, **kwargs)
         first_chunk_role = None
-        for chunk in self._client.predict_stream(endpoint=self.endpoint, inputs=data):
+        for chunk in self.client.predict_stream(endpoint=self.endpoint, inputs=data):  # type: ignore
             if chunk["choices"]:
                 choice = chunk["choices"][0]
 
