@@ -60,8 +60,23 @@ class DatabricksVectorSearch(VectorStore):
 
     Key init args — indexing params:
 
-        endpoint: The name of the Databricks Vector Search endpoint.
         index_name: The name of the index to use. Format: "catalog.schema.index".
+        endpoint: The name of the Databricks Vector Search endpoint. If not specified,
+            the endpoint name is automatically inferred based on the index name.
+
+            .. note::
+
+                If you are using `databricks-vectorsearch` version < 0.35, the `endpoint` parameter
+                is required when initializing the vector store.
+
+                .. code-block:: python
+
+                    vector_store = DatabricksVectorSearch(
+                        endpoint="<your-endpoint-name>",
+                        index_name="<your-index-name>",
+                        ...
+                    )
+
         embedding: The embedding model.
                   Required for direct-access index or delta-sync index
                   with self-managed embeddings.
@@ -105,19 +120,6 @@ class DatabricksVectorSearch(VectorStore):
                 embedding=OpenAIEmbeddings(),
                 text_column="document_content"
             )
-
-        .. note::
-
-            If you are using `databricks-vectorsearch` version earlier than 0.35, you also need to
-            provide the `endpoint` parameter when initializing the vector store.
-
-            .. code-block:: python
-
-                vector_store = DatabricksVectorSearch(
-                    endpoint="<your-endpoint-name>",
-                    index_name="<your-index-name>",
-                    ...
-                )
 
     Add Documents:
         .. code-block:: python
