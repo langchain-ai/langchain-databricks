@@ -89,7 +89,6 @@ class DatabricksVectorSearch(VectorStore):
             from langchain_databricks.vectorstores import DatabricksVectorSearch
 
             vector_store = DatabricksVectorSearch(
-                endpoint="<your-endpoint-name>",
                 index_name="<your-index-name>"
             )
 
@@ -102,11 +101,23 @@ class DatabricksVectorSearch(VectorStore):
             from langchain_openai import OpenAIEmbeddings
 
             vector_store = DatabricksVectorSearch(
-                endpoint="<your-endpoint-name>",
                 index_name="<your-index-name>",
                 embedding=OpenAIEmbeddings(),
                 text_column="document_content"
             )
+
+        .. note::
+
+            If you are using `databricks-vectorsearch` version earlier than 0.35, you also need to
+            provide the `endpoint` parameter when initializing the vector store.
+
+            .. code-block:: python
+
+                vector_store = DatabricksVectorSearch(
+                    endpoint="<your-endpoint-name>",
+                    index_name="<your-index-name>",
+                    ...
+                )
 
     Add Documents:
         .. code-block:: python
@@ -196,8 +207,8 @@ class DatabricksVectorSearch(VectorStore):
 
     def __init__(
         self,
-        endpoint: str,
         index_name: str,
+        endpoint: Optional[str] = None,
         embedding: Optional[Embeddings] = None,
         text_column: Optional[str] = None,
         columns: Optional[List[str]] = None,
@@ -212,7 +223,21 @@ class DatabricksVectorSearch(VectorStore):
                 "Please install it with `pip install databricks-vectorsearch`."
             ) from e
 
-        self.index = VectorSearchClient().get_index(endpoint, index_name)
+        try:
+            self.index = VectorSearchClient().get_index(
+                endpoint_name=endpoint, index_name=index_name
+            )
+        except Exception as e:
+            if endpoint is None and "Wrong vector search endpoint" in str(e):
+                raise ValueError(
+                    "The `endpoint` parameter is required for instantiating "
+                    "DatabricksVectorSearch with the `databricks-vectorsearch` "
+                    "version earlier than 0.35. Please provide the endpoint "
+                    "name or upgrade to version 0.35 or later."
+                ) from e
+            else:
+                raise
+
         self._index_details = IndexDetails(self.index)
 
         _validate_embedding(embedding, self._index_details)
