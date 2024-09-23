@@ -1,3 +1,14 @@
+"""
+This file contains the integration test for ChatDatabricks class.
+
+We run the integration tests nightly by the trusted CI/CD system defined in
+a private repository, in order to securely run the tests. With this design,
+integration test is not intended to be run manually by OSS contributors.
+If you want to update the ChatDatabricks implementation and you think that you
+need to update the corresponding integration test, please contact to the
+maintainers of the repository to verify the changes.
+"""
+
 from typing import Annotated
 from unittest import mock
 
