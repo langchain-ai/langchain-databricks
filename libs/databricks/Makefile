@@ -26,14 +26,17 @@ MYPY_CACHE=.mypy_cache
 lint format: PYTHON_FILES=.
 lint_diff format_diff: PYTHON_FILES=$(shell git diff --relative=libs/partners/databricks --name-only --diff-filter=d master | grep -E '\.py$$|\.ipynb$$')
 lint_package: PYTHON_FILES=langchain_databricks
-lint_tests: PYTHON_FILES=tests
-lint_tests: MYPY_CACHE=.mypy_cache_test
 
-lint lint_diff lint_package lint_tests:
+lint lint_diff lint_package:
 	poetry run ruff check .
 	poetry run ruff format $(PYTHON_FILES) --diff
 	poetry run ruff check --select I $(PYTHON_FILES)
 	mkdir -p $(MYPY_CACHE); poetry run mypy $(PYTHON_FILES) --cache-dir $(MYPY_CACHE)
+
+lint_tests:
+	poetry run ruff check .
+	poetry run ruff format tests --diff
+	poetry run ruff check --select I tests
 
 format format_diff:
 	poetry run ruff format $(PYTHON_FILES)
