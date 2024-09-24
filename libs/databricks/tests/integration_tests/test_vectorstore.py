@@ -12,9 +12,11 @@ the maintainers of the repository to verify the changes.
 import os
 import time
 
+import pytest
 import requests
 
 
+@pytest.mark.timeout(3600)
 def test_vectorstore():
     """
     We run the integration tests for vector store by Databricks Workflow,
@@ -36,10 +38,12 @@ def test_vectorstore():
         },
         headers=headers,
     )
-    no_active_run = "runs" not in response.json() or len(response.json()["runs"]) == 0
+    no_active_run = len(response.json().get("runs", [])) == 0
     assert no_active_run, "There is an ongoing job run. Please wait for it to complete."
 
     # Trigger the workflow
+    # TODO: We are going to replace this with the Databricks SDK once the vector store
+    # class is also migrated to the SDK.
     response = requests.post(
         f"{test_endpoint}/api/2.1/jobs/run-now",
         json={
@@ -49,6 +53,9 @@ def test_vectorstore():
     )
 
     assert response.status_code == 200, "Failed to trigger the workflow."
+
+    job_url = f"{test_endpoint}/jobs/{test_job_id}/runs/{response.json()['run_id']}"
+    print(f"Started the job at {job_url}")  # noqa: T201
 
     # Wait for the job to complete
     while True:
