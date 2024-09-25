@@ -23,6 +23,10 @@ def test_vectorstore():
     because the setup is too complex to run within a single python file.
     Thereby, this test simply triggers the workflow by calling the REST API.
     """
+    required_env_vars = ["DATABRICKS_HOST", "DATABRICKS_TOKEN", "VS_TEST_JOB_ID"]
+    for var in required_env_vars:
+        assert os.getenv(var), f"Please set the environment variable {var}."
+
     test_endpoint = os.getenv("DATABRICKS_HOST")
     test_job_id = os.getenv("VS_TEST_JOB_ID")
     headers = {
