@@ -37,9 +37,7 @@ def test_vectorstore():
 
     # Trigger the workflow
     response = w.jobs.run_now(job_id=test_job_id)
-    job_url = (
-        f"{os.getenv('DATABRICKS_HOST')}/jobs/{test_job_id}/runs/{response.run_id}"
-    )
+    job_url = f"{w.config.host}/jobs/{test_job_id}/runs/{response.run_id}"
     print(f"Started the job at {job_url}")  # noqa: T201
 
     # Wait for the job to complete
