@@ -322,4 +322,13 @@ def test_chat_databricks_langgraph_with_memory():
         {"messages": [("user", "Subtract 5 from it")]},
         config={"configurable": {"thread_id": "1"}},
     )
+
+    # Interestingly, the agent sometimes mistakes the subtraction for addition:(
+    # In such case, the agent asks for a retry so we need one more step.
+    if "Let me try again." in response["messages"][-1].content:
+        response = graph.invoke(
+            {"messages": [("user", "Ok, try again")]},
+            config={"configurable": {"thread_id": "1"}},
+        )
+
     assert "40" in response["messages"][-1].content
