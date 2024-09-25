@@ -52,6 +52,7 @@ optional = true
 
 [tool.poetry.group.test_integration.dependencies]
 langchain = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/langchain" }
+langgraph = "^0.2.27"
 pytest-timeout = "^2.3.1"
 
 [tool.poetry.group.lint]
