@@ -13,7 +13,7 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
-langchain-core = ">=0.2.35"
+langchain-core = ">=0.2.35,<0.4"
 
 # MLflow supports python 3.12 since https://github.com/mlflow/mlflow/commit/04370119fcc1b2ccdbcd9a50198ab00566d58cd2
 mlflow = [
