@@ -157,9 +157,10 @@ jobs:
         run: make tests
         working-directory: ${{ inputs.working-directory }}
 
-      - name: Run integration tests
-        run: make integration_tests
-        working-directory: ${{ inputs.working-directory }}
+      # Integration test is executed nightly in the separate private repository.
+      # - name: Run integration tests
+      #   run: make integration_tests
+      #   working-directory: ${{ inputs.working-directory }}
 
       - name: Get minimum versions
         working-directory: ${{ inputs.working-directory }}
