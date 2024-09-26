@@ -7,6 +7,7 @@ This repository provides LangChain components to connect your LangChain applicat
 - **🤖 LLMs**: The `ChatDatabricks` component allows you to access chat endpoints hosted on [Databricks Model Serving](https://www.databricks.com/product/model-serving), including state-of-the-art models such as Llama3, Mixtral, and DBRX, as well as your own fine-tuned models.
 - **📐 Vector Store**: [Databricks Vector Search](https://www.databricks.com/product/machine-learning/vector-search) is a serverless similarity search engine that allows you to store a vector representation of your data, including metadata, in a vector database. With Vector Search, you can create auto-updating vector search indexes from Delta tables managed by Unity Catalog and query them with a simple API to return the most similar vectors.
 - **🔢 Embeddings**: Provides components for working with embedding models hosted on [Databricks Model Serving](https://www.databricks.com/product/model-serving).
+- **📊 MLflow Integration**: LangChain Databricks components is fully integrated with [MLflow](https://python.langchain.com/docs/integrations/providers/mlflow_tracking/), providing various LLMOps capabilities such as experiment tracking, dependency management, evaluation, and tracing (observability).
 
 **Note**: This repository will replace all Databricks integrations currently present in the `langchain-community` package. Users are encouraged to migrate to this repository as soon as possible.
 
