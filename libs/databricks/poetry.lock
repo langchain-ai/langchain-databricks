@@ -1322,7 +1322,7 @@ files = [
 
 [[package]]
 name = "langchain"
-version = "0.3.0"
+version = "0.3.1"
 description = "Building applications with LLMs through composability"
 optional = false
 python-versions = ">=3.9,<4.0"
@@ -1332,7 +1332,7 @@ develop = false
 [package.dependencies]
 aiohttp = "^3.8.3"
 async-timeout = {version = "^4.0.0", markers = "python_version < \"3.11\""}
-langchain-core = "^0.3.0"
+langchain-core = "^0.3.6"
 langchain-text-splitters = "^0.3.0"
 langsmith = "^0.1.17"
 numpy = [
@@ -1349,12 +1349,12 @@ tenacity = "^8.1.0,!=8.4.0"
 type = "git"
 url = "https://github.com/langchain-ai/langchain.git"
 reference = "HEAD"
-resolved_reference = "82b5b77940e97f65179efa0268031c47d0584a1c"
+resolved_reference = "2ea5f60cc5747a334550273a5dba1b70b11414c1"
 subdirectory = "libs/langchain"
 
 [[package]]
 name = "langchain-core"
-version = "0.3.5"
+version = "0.3.6"
 description = "Building applications with LLMs through composability"
 optional = false
 python-versions = ">=3.9,<4.0"
@@ -1377,7 +1377,7 @@ typing-extensions = ">=4.7"
 type = "git"
 url = "https://github.com/langchain-ai/langchain.git"
 reference = "HEAD"
-resolved_reference = "82b5b77940e97f65179efa0268031c47d0584a1c"
+resolved_reference = "2ea5f60cc5747a334550273a5dba1b70b11414c1"
 subdirectory = "libs/core"
 
 [[package]]
@@ -1396,13 +1396,13 @@ langchain-core = ">=0.3.0,<0.4.0"
 
 [[package]]
 name = "langgraph"
-version = "0.2.27"
+version = "0.2.28"
 description = "Building stateful, multi-actor applications with LLMs"
 optional = false
 python-versions = "<4.0,>=3.9.0"
 files = [
-    {file = "langgraph-0.2.27-py3-none-any.whl", hash = "sha256:2ed1a521209737f50833d433a1c0ffef3a1f0e2a94f6ffda97f5bc2d673db010"},
-    {file = "langgraph-0.2.27.tar.gz", hash = "sha256:b9e98fe011100a0a52f0c6936ce672330fd245b81cd6fe5ae30c0eb34663b99a"},
+    {file = "langgraph-0.2.28-py3-none-any.whl", hash = "sha256:23390763c025139f71dc1f1576b31b6755fecff8dcc51a84505e24e63ec1218b"},
+    {file = "langgraph-0.2.28.tar.gz", hash = "sha256:c968a1ed85025e0651d9390a7ba978447ab80d676f81dd0a049a7456754b3bce"},
 ]
 
 [package.dependencies]
@@ -3370,4 +3370,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0"
-content-hash = "c6485b9664d292281f293ca0b3ee5a19a625224eff2146e4ff348f4afc45a2bc"
+content-hash = "50d2336743f72e9f8bde793b6df1915948a3f3da96f2f58e9de4bb56a950a662"
