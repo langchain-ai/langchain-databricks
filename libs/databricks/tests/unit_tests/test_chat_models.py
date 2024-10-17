@@ -187,26 +187,58 @@ def test_chat_model_stream(llm: ChatDatabricks) -> None:
         assert chunk.content == expected["choices"][0]["delta"]["content"]  # type: ignore[index]
 
 
+class GetWeather(BaseModel):
+    """Get the current weather in a given location"""
+
+    location: str = Field(..., description="The city and state, e.g. San Francisco, CA")
+
+
+class GetPopulation(BaseModel):
+    """Get the current population in a given location"""
+
+    location: str = Field(..., description="The city and state, e.g. San Francisco, CA")
+
+
 def test_chat_model_bind_tools(llm: ChatDatabricks) -> None:
-    class GetWeather(BaseModel):
-        """Get the current weather in a given location"""
-
-        location: str = Field(
-            ..., description="The city and state, e.g. San Francisco, CA"
-        )
-
-    class GetPopulation(BaseModel):
-        """Get the current population in a given location"""
-
-        location: str = Field(
-            ..., description="The city and state, e.g. San Francisco, CA"
-        )
-
     llm_with_tools = llm.bind_tools([GetWeather, GetPopulation])
     response = llm_with_tools.invoke(
         "Which city is hotter today and which is bigger: LA or NY?"
     )
     assert isinstance(response, AIMessage)
+
+
+@pytest.mark.parametrize(
+    ("tool_choice", "expected_output"),
+    [
+        ("auto", "auto"),
+        ("none", "none"),
+        ("required", "required"),
+        # "any" should be replaced with "required"
+        ("any", "required"),
+        ("GetWeather", {"type": "function", "function": {"name": "GetWeather"}}),
+        (
+            {"type": "function", "function": {"name": "GetWeather"}},
+            {"type": "function", "function": {"name": "GetWeather"}},
+        ),
+    ],
+)
+def test_chat_model_bind_tools_with_choices(
+    llm: ChatDatabricks, tool_choice, expected_output
+) -> None:
+    llm_with_tool = llm.bind_tools([GetWeather], tool_choice=tool_choice)
+    assert llm_with_tool.kwargs["tool_choice"] == expected_output
+
+
+def test_chat_model_bind_tolls_with_invalid_choices(llm: ChatDatabricks) -> None:
+    with pytest.raises(ValueError, match="Unrecognized tool_choice type"):
+        llm.bind_tools([GetWeather], tool_choice=123)
+
+    # Non-existing tool
+    with pytest.raises(ValueError, match="Tool choice"):
+        llm.bind_tools(
+            [GetWeather],
+            tool_choice={"type": "function", "function": {"name": "NonExistingTool"}},
+        )
 
 
 ### Test data conversion functions ###

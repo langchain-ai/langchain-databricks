@@ -162,7 +162,8 @@ async def test_chat_databricks_abatch():
     assert all(isinstance(response, AIMessage) for response in responses)
 
 
-def test_chat_databricks_tool_calls():
+@pytest.mark.parametrize("tool_choice", [None, "auto", "required", "any", "none"])
+def test_chat_databricks_tool_calls(tool_choice):
     from pydantic import BaseModel, Field
 
     chat = ChatDatabricks(
@@ -178,9 +179,13 @@ def test_chat_databricks_tool_calls():
             ..., description="The city and state, e.g. San Francisco, CA"
         )
 
-    llm_with_tools = chat.bind_tools([GetWeather])
+    llm_with_tools = chat.bind_tools([GetWeather], tool_choice=tool_choice)
     question = "Which is the current weather in Los Angeles, CA?"
     response = llm_with_tools.invoke(question)
+
+    if tool_choice == "none":
+        assert response.tool_calls == []
+        return
 
     assert response.tool_calls == [
         {
