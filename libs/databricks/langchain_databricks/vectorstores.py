@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import re
 import uuid
 from enum import Enum
 from functools import partial
@@ -36,6 +37,7 @@ _DIRECT_ACCESS_ONLY_MSG = "`%s` is only supported for direct-access index."
 _NON_MANAGED_EMB_ONLY_MSG = (
     "`%s` is not supported for index with Databricks-managed embeddings."
 )
+_INDEX_NAME_PATTERN = re.compile(r"^[a-zA-Z0-9_]+\.[a-zA-Z0-9_]+\.[a-zA-Z0-9_]+$")
 
 
 class DatabricksVectorSearch(VectorStore):
@@ -215,6 +217,12 @@ class DatabricksVectorSearch(VectorStore):
         text_column: Optional[str] = None,
         columns: Optional[List[str]] = None,
     ):
+        if not (isinstance(index_name, str) and _INDEX_NAME_PATTERN.match(index_name)):
+            raise ValueError(
+                "The `index_name` parameter must be a string in the format "
+                f"'catalog.schema.index'. Received: {index_name}"
+            )
+
         try:
             from databricks.vector_search.client import (  # type: ignore[import]
                 VectorSearchClient,

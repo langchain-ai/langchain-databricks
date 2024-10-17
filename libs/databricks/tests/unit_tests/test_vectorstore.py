@@ -4,6 +4,7 @@ from unittest import mock
 from unittest.mock import MagicMock, patch
 
 import pytest
+from databricks.vector_search.client import VectorSearchIndex  # type: ignore
 from langchain_core.embeddings import Embeddings
 
 from langchain_databricks.vectorstores import DatabricksVectorSearch
@@ -65,9 +66,9 @@ EXAMPLE_SEARCH_RESPONSE = {
 ### Dummy Indices ####
 
 ENDPOINT_NAME = "test-endpoint"
-DIRECT_ACCESS_INDEX = "test-direct-access-index"
-DELTA_SYNC_INDEX = "test-delta-sync-index"
-DELTA_SYNC_SELF_MANAGED_EMBEDDINGS_INDEX = "test-delta-sync-self-managed-index"
+DIRECT_ACCESS_INDEX = "test.direct_access.index"
+DELTA_SYNC_INDEX = "test.delta_sync.index"
+DELTA_SYNC_SELF_MANAGED_EMBEDDINGS_INDEX = "test.delta_sync_self_managed.index"
 ALL_INDEX_NAMES = {
     DIRECT_ACCESS_INDEX,
     DELTA_SYNC_INDEX,
@@ -137,8 +138,6 @@ def mock_vs_client() -> Generator:
         endpoint_name: Optional[str] = None,
         index_name: str = None,  # type: ignore
     ) -> MagicMock:
-        from databricks.vector_search.client import VectorSearchIndex  # type: ignore
-
         index = MagicMock(spec=VectorSearchIndex)
         index.describe.return_value = INDEX_DETAILS[index_name]
         index.similarity_search.return_value = EXAMPLE_SEARCH_RESPONSE
@@ -182,6 +181,14 @@ def test_init_with_endpoint_name() -> None:
         index_name=DELTA_SYNC_INDEX,
     )
     assert vectorsearch.index.describe() == INDEX_DETAILS[DELTA_SYNC_INDEX]
+
+
+@pytest.mark.parametrize(
+    "index_name", [None, "invalid", 123, MagicMock(spec=VectorSearchIndex)]
+)
+def test_init_fail_invalid_index_name(index_name) -> None:
+    with pytest.raises(ValueError, match="The `index_name` parameter must be"):
+        DatabricksVectorSearch(index_name=index_name)
 
 
 def test_init_fail_text_column_mismatch() -> None:
