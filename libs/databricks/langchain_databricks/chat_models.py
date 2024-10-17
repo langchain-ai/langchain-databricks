@@ -367,11 +367,16 @@ class ChatDatabricks(BaseChatModel):
         if tool_choice:
             if isinstance(tool_choice, str):
                 # tool_choice is a tool/function name
-                if tool_choice not in ("auto", "none", "required"):
+                if tool_choice not in ("auto", "none", "required", "any"):
                     tool_choice = {
                         "type": "function",
                         "function": {"name": tool_choice},
                     }
+                # 'any' is not natively supported by OpenAI API,
+                # but supported by other models in Langchain.
+                # Ref: https://github.com/langchain-ai/langchain/blob/202d7f6c4a2ca8c7e5949d935bcf0ba9b0c23fb0/libs/partners/openai/langchain_openai/chat_models/base.py#L1098C1-L1101C45
+                if tool_choice == "any":
+                    tool_choice = "required"
             elif isinstance(tool_choice, dict):
                 tool_names = [
                     formatted_tool["function"]["name"]
