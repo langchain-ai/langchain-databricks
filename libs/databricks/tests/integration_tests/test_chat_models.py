@@ -29,6 +29,7 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import START, StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, create_react_agent, tools_condition
+from pydantic import BaseModel, Field
 from typing_extensions import TypedDict
 
 from langchain_databricks.chat_models import ChatDatabricks
@@ -164,8 +165,6 @@ async def test_chat_databricks_abatch():
 
 @pytest.mark.parametrize("tool_choice", [None, "auto", "required", "any", "none"])
 def test_chat_databricks_tool_calls(tool_choice):
-    from pydantic import BaseModel, Field
-
     chat = ChatDatabricks(
         endpoint=_TEST_ENDPOINT,
         temperature=0,
@@ -217,6 +216,66 @@ def test_chat_databricks_tool_calls(tool_choice):
             "type": "tool_call",
         }
     ]
+
+
+# Pydantic-based schema
+class AnswerWithJustification(BaseModel):
+    """An answer to the user question along with justification for the answer."""
+
+    answer: str = Field(description="The answer to the user question.")
+    justification: str = Field(description="The justification for the answer.")
+
+
+# Raw JSON schema
+JSON_SCHEMA = {
+    "title": "AnswerWithJustification",
+    "description": "An answer to the user question along with justification.",
+    "type": "object",
+    "properties": {
+        "answer": {
+            "type": "string",
+            "description": "The answer to the user question.",
+        },
+        "justification": {
+            "type": "string",
+            "description": "The justification for the answer.",
+        },
+    },
+    "required": ["answer", "justification"],
+}
+
+
+@pytest.mark.parametrize("schema", [AnswerWithJustification, JSON_SCHEMA, None])
+@pytest.mark.parametrize("method", ["function_calling", "json_mode"])
+def test_chat_databricks_with_structured_output(schema, method):
+    llm = ChatDatabricks(endpoint=_TEST_ENDPOINT)
+
+    if schema is None and method == "function_calling":
+        pytest.skip("Cannot use function_calling without schema")
+
+    structured_llm = llm.with_structured_output(schema, method=method)
+
+    if method == "function_calling":
+        prompt = "What day comes two days after Monday?"
+    else:
+        prompt = (
+            "What day comes two days after Monday? Return in JSON format with key "
+            "'answer' for the answer and 'justification' for the justification."
+        )
+
+    response = structured_llm.invoke(prompt)
+
+    if schema == AnswerWithJustification:
+        assert response.answer == "Wednesday"
+        assert response.justification is not None
+    else:
+        assert response["answer"] == "Wednesday"
+        assert response["justification"] is not None
+
+    # Invoke with raw output
+    structured_llm = llm.with_structured_output(schema, method=method, include_raw=True)
+    response_with_raw = structured_llm.invoke(prompt)
+    assert isinstance(response_with_raw["raw"], AIMessage)
 
 
 def test_chat_databricks_runnable_sequence():
