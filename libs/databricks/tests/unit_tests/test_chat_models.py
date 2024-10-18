@@ -20,6 +20,7 @@ from langchain_core.messages import (
     ToolMessageChunk,
 )
 from langchain_core.messages.tool import ToolCallChunk
+from langchain_core.runnables import RunnableMap
 from pydantic import BaseModel, Field
 
 from langchain_databricks.chat_models import (
@@ -239,6 +240,51 @@ def test_chat_model_bind_tolls_with_invalid_choices(llm: ChatDatabricks) -> None
             [GetWeather],
             tool_choice={"type": "function", "function": {"name": "NonExistingTool"}},
         )
+
+
+# Pydantic-based schema
+class AnswerWithJustification(BaseModel):
+    """An answer to the user question along with justification for the answer."""
+
+    answer: str = Field(description="The answer to the user question.")
+    justification: str = Field(description="The justification for the answer.")
+
+
+# Raw JSON schema
+JSON_SCHEMA = {
+    "title": "AnswerWithJustification",
+    "description": "An answer to the user question along with justification.",
+    "type": "object",
+    "properties": {
+        "answer": {
+            "type": "string",
+            "description": "The answer to the user question.",
+        },
+        "justification": {
+            "type": "string",
+            "description": "The justification for the answer.",
+        },
+    },
+    "required": ["answer", "justification"],
+}
+
+
+@pytest.mark.parametrize("schema", [AnswerWithJustification, JSON_SCHEMA, None])
+@pytest.mark.parametrize("method", ["function_calling", "json_mode"])
+def test_chat_model_with_structured_output(llm, schema, method: str):
+    if schema is None and method == "function_calling":
+        pytest.skip("Cannot use function_calling without schema")
+
+    structured_llm = llm.with_structured_output(schema, method=method)
+
+    bind = structured_llm.first.kwargs
+    if method == "function_calling":
+        assert bind["tool_choice"]["function"]["name"] == "AnswerWithJustification"
+    else:
+        assert bind["response_format"] == {"type": "json_object"}
+
+    structured_llm = llm.with_structured_output(schema, include_raw=True, method=method)
+    assert isinstance(structured_llm.first, RunnableMap)
 
 
 ### Test data conversion functions ###
