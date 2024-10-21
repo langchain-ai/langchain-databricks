@@ -346,8 +346,7 @@ class ChatDatabricks(BaseChatModel):
                 if first_chunk_role is None:
                     first_chunk_role = chunk_delta.get("role")
 
-                if stream_usage:
-                    usage = chunk.get("usage", {})
+                if stream_usage and (usage := chunk.get("usage")):
                     input_tokens = usage.get("prompt_tokens", 0)
                     output_tokens = usage.get("completion_tokens", 0)
                     usage = {
@@ -806,7 +805,7 @@ def _convert_dict_to_message(_dict: Dict) -> BaseMessage:
 def _convert_dict_to_message_chunk(
     _dict: Mapping[str, Any],
     default_role: str,
-    usage: Optional[Dict] = None,
+    usage: Optional[Dict[str, Any]] = None,
 ) -> BaseMessageChunk:
     role = _dict.get("role", default_role)
     content = _dict.get("content")
