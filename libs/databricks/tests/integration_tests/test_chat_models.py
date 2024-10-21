@@ -116,6 +116,38 @@ def test_chat_databricks_stream():
     assert last_chunk.response_metadata["finish_reason"] == "stop"
 
 
+def test_chat_databricks_stream_with_usage():
+    class FakeCallbackHandler(BaseCallbackHandler):
+        def __init__(self):
+            self.chunk_counts = 0
+
+        def on_llm_new_token(self, *args, **kwargs):
+            self.chunk_counts += 1
+
+    callback = FakeCallbackHandler()
+
+    chat = ChatDatabricks(
+        endpoint=_TEST_ENDPOINT,
+        temperature=0,
+        stop=["Python"],
+        max_tokens=100,
+        stream_usage=True,
+    )
+
+    chunks = list(chat.stream("How to learn Python?", config={"callbacks": [callback]}))
+    assert len(chunks) > 0
+    assert all(isinstance(chunk, AIMessageChunk) for chunk in chunks)
+    assert all("Python" not in chunk.content for chunk in chunks)
+    assert callback.chunk_counts == len(chunks)
+
+    last_chunk = chunks[-1]
+    assert last_chunk.response_metadata["finish_reason"] == "stop"
+    assert last_chunk.usage_metadata is not None
+    assert last_chunk.usage_metadata["input_tokens"] > 0
+    assert last_chunk.usage_metadata["output_tokens"] > 0
+    assert last_chunk.usage_metadata["total_tokens"] > 0
+
+
 @pytest.mark.asyncio
 async def test_chat_databricks_ainvoke():
     chat = ChatDatabricks(
