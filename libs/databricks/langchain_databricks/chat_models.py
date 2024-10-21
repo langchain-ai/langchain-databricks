@@ -163,10 +163,7 @@ class ChatDatabricks(BaseChatModel):
         .. code-block:: python
 
             stream = llm.stream(messages, stream_usage=True)
-            full = next(stream)
-            for chunk in stream:
-                full += chunk
-            full.usage_metadata
+            next(stream).usage_metadata
 
         .. code-block:: python
 
