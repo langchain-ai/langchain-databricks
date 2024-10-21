@@ -188,6 +188,43 @@ def test_chat_model_stream(llm: ChatDatabricks) -> None:
         assert chunk.content == expected["choices"][0]["delta"]["content"]  # type: ignore[index]
 
 
+def test_chat_model_stream_with_usage(llm: ChatDatabricks) -> None:
+    def _assert_usage(chunk, expected):
+        usage = chunk.usage_metadata
+        assert usage is not None
+        assert usage["input_tokens"] == expected["usage"]["prompt_tokens"]
+        assert usage["output_tokens"] == expected["usage"]["completion_tokens"]
+        assert usage["total_tokens"] == usage["input_tokens"] + usage["output_tokens"]
+
+    # Method 1: Pass stream_usage=True to the constructor
+    res = llm.stream(
+        [
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": "36939 * 8922.4"},
+        ],
+        stream_usage=True,
+    )
+    for chunk, expected in zip(res, _MOCK_STREAM_RESPONSE):
+        assert chunk.content == expected["choices"][0]["delta"]["content"]  # type: ignore[index]
+        _assert_usage(chunk, expected)
+
+    # Method 2: Pass stream_usage=True to the constructor
+    llm_with_usage = ChatDatabricks(
+        endpoint="databricks-meta-llama-3-70b-instruct",
+        target_uri="databricks",
+        stream_usage=True,
+    )
+    res = llm_with_usage.stream(
+        [
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": "36939 * 8922.4"},
+        ],
+    )
+    for chunk, expected in zip(res, _MOCK_STREAM_RESPONSE):
+        assert chunk.content == expected["choices"][0]["delta"]["content"]  # type: ignore[index]
+        _assert_usage(chunk, expected)
+
+
 class GetWeather(BaseModel):
     """Get the current weather in a given location"""
 

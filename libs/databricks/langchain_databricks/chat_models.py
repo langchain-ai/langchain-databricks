@@ -35,6 +35,7 @@ from langchain_core.messages import (
     ToolMessage,
     ToolMessageChunk,
 )
+from langchain_core.messages.ai import UsageMetadata
 from langchain_core.messages.tool import tool_call_chunk
 from langchain_core.output_parsers import JsonOutputParser, PydanticOutputParser
 from langchain_core.output_parsers.base import OutputParserLike
@@ -157,6 +158,30 @@ class ChatDatabricks(BaseChatModel):
                 id='run-4cef851f-6223-424f-ad26-4a54e5852aa5'
             )
 
+        To get token usage returned when streaming, pass the ``stream_usage`` kwarg:
+
+        .. code-block:: python
+
+            stream = llm.stream(messages, stream_usage=True)
+            next(stream).usage_metadata
+
+        .. code-block:: python
+
+            {"input_tokens": 28, "output_tokens": 5, "total_tokens": 33}
+
+        Alternatively, setting ``stream_usage`` when instantiating the model can be
+        useful when incorporating ``ChatDatabricks`` into LCEL chains-- or when using
+        methods like ``.with_structured_output``, which generate chains under the
+        hood.
+
+        .. code-block:: python
+
+            llm = ChatDatabricks(
+                endpoint="databricks-meta-llama-3-1-405b-instruct",
+                stream_usage=True
+            )
+            structured_llm = llm.with_structured_output(...)
+
     Async:
         .. code-block:: python
 
@@ -229,6 +254,10 @@ class ChatDatabricks(BaseChatModel):
     max_tokens: Optional[int] = None
     """The maximum number of tokens to generate."""
     extra_params: Optional[Dict[str, Any]] = None
+    """Whether to include usage metadata in streaming output. If True, additional
+    message chunks will be generated during the stream including usage metadata.
+    """
+    stream_usage: bool = False
     """Any extra parameters to pass to the endpoint."""
     client: Optional[BaseDeploymentClient] = Field(
         default=None, exclude=True
@@ -301,8 +330,12 @@ class ChatDatabricks(BaseChatModel):
         messages: List[BaseMessage],
         stop: Optional[List[str]] = None,
         run_manager: Optional[CallbackManagerForLLMRun] = None,
+        *,
+        stream_usage: Optional[bool] = None,
         **kwargs: Any,
     ) -> Iterator[ChatGenerationChunk]:
+        if stream_usage is None:
+            stream_usage = self.stream_usage
         data = self._prepare_inputs(messages, stop, **kwargs)
         first_chunk_role = None
         for chunk in self.client.predict_stream(endpoint=self.endpoint, inputs=data):  # type: ignore
@@ -313,8 +346,19 @@ class ChatDatabricks(BaseChatModel):
                 if first_chunk_role is None:
                     first_chunk_role = chunk_delta.get("role")
 
+                if stream_usage and (usage := chunk.get("usage")):
+                    input_tokens = usage.get("prompt_tokens", 0)
+                    output_tokens = usage.get("completion_tokens", 0)
+                    usage = {
+                        "input_tokens": input_tokens,
+                        "output_tokens": output_tokens,
+                        "total_tokens": input_tokens + output_tokens,
+                    }
+                else:
+                    usage = None
+
                 chunk_message = _convert_dict_to_message_chunk(
-                    chunk_delta, first_chunk_role
+                    chunk_delta, first_chunk_role, usage=usage
                 )
 
                 generation_info = {}
@@ -759,7 +803,9 @@ def _convert_dict_to_message(_dict: Dict) -> BaseMessage:
 
 
 def _convert_dict_to_message_chunk(
-    _dict: Mapping[str, Any], default_role: str
+    _dict: Mapping[str, Any],
+    default_role: str,
+    usage: Optional[Dict[str, Any]] = None,
 ) -> BaseMessageChunk:
     role = _dict.get("role", default_role)
     content = _dict.get("content")
@@ -790,11 +836,13 @@ def _convert_dict_to_message_chunk(
                 ]
             except KeyError:
                 pass
+        usage_metadata = UsageMetadata(**usage) if usage else None  # type: ignore
         return AIMessageChunk(
             content=content,
             additional_kwargs=additional_kwargs,
             id=_dict.get("id"),
             tool_call_chunks=tool_call_chunks,
+            usage_metadata=usage_metadata,
         )
     else:
         return ChatMessageChunk(content=content, role=role)
