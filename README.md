@@ -2,7 +2,16 @@
 
 This repository provides LangChain components to connect your LangChain application with various Databricks services.
 
-**Future Deprecation Notice** This package is scheduled for deprecation as all Databricks integrations will be consolidated in the `databricks-langchain` package. Users are encouraged to transition to `databricks-langchain` for continued support, updates, and new features.
+## Upcoming Package Consolidation Notice
+This package (`langchain-databricks`) will soon be consolidated into a new package: `databricks-langchain`. The new package will serve as the primary hub for all Databricks Langchain integrations.
+
+### What’s Changing?
+In the coming months, `databricks-langchain` will include all features currently in `langchain-databricks`, as well as additional integrations to provide a unified experience for Databricks users.
+
+### What You Need to Know
+For now, continue to use `langchain-databricks` as usual. When `databricks-langchain` is ready, we’ll provide clear migration instructions to make the transition seamless. During the transition period, `langchain-databricks` will remain operational, and updates will be shared here with timelines and guidance.
+
+Thank you for your support as we work toward an improved, streamlined experience!
 
 ## Features
 
