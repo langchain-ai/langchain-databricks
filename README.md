@@ -2,6 +2,8 @@
 
 This repository provides LangChain components to connect your LangChain application with various Databricks services.
 
+**Future Deprecation Notice** This package is scheduled for deprecation as all Databricks integrations will be consolidated in the `databricks-langchain` package. Users are encouraged to transition to `databricks-langchain` for continued support, updates, and new features.
+
 ## Features
 
 - **🤖 LLMs**: The `ChatDatabricks` component allows you to access chat endpoints hosted on [Databricks Model Serving](https://www.databricks.com/product/model-serving), including state-of-the-art models such as Llama3, Mixtral, and DBRX, as well as your own fine-tuned models.
