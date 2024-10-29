@@ -2,6 +2,17 @@
 
 This repository provides LangChain components to connect your LangChain application with various Databricks services.
 
+## Upcoming Package Consolidation Notice
+This package (`langchain-databricks`) will soon be consolidated into a new package: `databricks-langchain`. The new package will serve as the primary hub for all Databricks Langchain integrations.
+
+### What’s Changing?
+In the coming months, `databricks-langchain` will include all features currently in `langchain-databricks`, as well as additional integrations to provide a unified experience for Databricks users.
+
+### What You Need to Know
+For now, continue to use `langchain-databricks` as usual. When `databricks-langchain` is ready, we’ll provide clear migration instructions to make the transition seamless. During the transition period, `langchain-databricks` will remain operational, and updates will be shared here with timelines and guidance.
+
+Thank you for your support as we work toward an improved, streamlined experience!
+
 ## Features
 
 - **🤖 LLMs**: The `ChatDatabricks` component allows you to access chat endpoints hosted on [Databricks Model Serving](https://www.databricks.com/product/model-serving), including state-of-the-art models such as Llama3, Mixtral, and DBRX, as well as your own fine-tuned models.
