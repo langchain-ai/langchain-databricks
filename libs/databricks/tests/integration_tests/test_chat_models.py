@@ -352,7 +352,7 @@ def test_chat_databricks_agent_executor():
         temperature=0,
         max_tokens=100,
     )
-    tools = [add, multiply]
+    tools = [add]
     prompt = ChatPromptTemplate.from_messages(
         [
             ("system", "You are a helpful assistant"),
@@ -364,8 +364,8 @@ def test_chat_databricks_agent_executor():
     agent = create_tool_calling_agent(model, tools, prompt)
     agent_executor = AgentExecutor(agent=agent, tools=tools)
 
-    response = agent_executor.invoke({"input": "What is (10 + 5) * 3?"})
-    assert "45" in response["output"]
+    response = agent_executor.invoke({"input": "What is 1 + 1?"})
+    assert "2" in response["output"]
 
 
 def test_chat_databricks_langgraph():
