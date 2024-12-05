@@ -36,6 +36,7 @@ from langchain_databricks.chat_models import ChatDatabricks
 
 _TEST_ENDPOINT = "databricks-meta-llama-3-1-70b-instruct"
 
+
 def test_chat_databricks_invoke():
     chat = ChatDatabricks(
         endpoint=_TEST_ENDPOINT, temperature=0, max_tokens=10, stop=["Java"]
