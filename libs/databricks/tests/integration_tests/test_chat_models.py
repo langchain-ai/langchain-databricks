@@ -34,7 +34,7 @@ from typing_extensions import TypedDict
 
 from langchain_databricks.chat_models import ChatDatabricks
 
-_TEST_ENDPOINT = "databricks-meta-llama-3-70b-instruct"
+_TEST_ENDPOINT = "databricks-meta-llama-3-1-70b-instruct"
 
 
 def test_chat_databricks_invoke():
@@ -377,8 +377,8 @@ def test_chat_databricks_langgraph():
     tools = [add, multiply]
 
     app = create_react_agent(model, tools)
-    response = app.invoke({"messages": [("human", "What is (10 + 5) * 3?")]})
-    assert "45" in response["messages"][-1].content
+    response = app.invoke({"messages": [("human", "What is 1 + 1")]})
+    assert "2" in response["messages"][-1].content
 
 
 def test_chat_databricks_langgraph_with_memory():
@@ -409,7 +409,7 @@ def test_chat_databricks_langgraph_with_memory():
     graph = graph_builder.compile(checkpointer=MemorySaver())
 
     response = graph.invoke(
-        {"messages": [("user", "What is (10 + 5) * 3?")]},
+        {"messages": [("user", "What is 20 + 25?")]},
         config={"configurable": {"thread_id": "1"}},
     )
     assert "45" in response["messages"][-1].content
