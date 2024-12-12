@@ -47,7 +47,10 @@ def test_chat_databricks_invoke():
     assert response.content == "To learn "
     assert 20 <= response.response_metadata["prompt_tokens"] <= 30
     assert 1 <= response.response_metadata["completion_tokens"] <= 10
-    expected_total = response.response_metadata["prompt_tokens"] + response.response_metadata["completion_tokens"]
+    expected_total = (
+        response.response_metadata["prompt_tokens"]
+        + response.response_metadata["completion_tokens"]
+    )
     assert response.response_metadata["total_tokens"] == expected_total
 
     response = chat.invoke(
