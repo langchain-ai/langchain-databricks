@@ -21,6 +21,7 @@ import numpy as np
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_core.vectorstores import VST, VectorStore
+from langchain_core._api import deprecated
 
 from langchain_databricks.utils import maximal_marginal_relevance
 
@@ -38,6 +39,9 @@ _NON_MANAGED_EMB_ONLY_MSG = (
 )
 
 
+@deprecated(
+    since="0.1.2", removal="1.0", message="Use databricks_langchain.ChatDatabricks"
+)
 class DatabricksVectorSearch(VectorStore):
     """Databricks vector store integration.
 
