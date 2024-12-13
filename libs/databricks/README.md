@@ -1,5 +1,8 @@
 # 🦜️🔗 LangChain Databricks (Deprecated)
 
+| Note: this package is deprecated in favor of the renamed `databricks-langchain` package ([repo](https://github.com/databricks/databricks-ai-bridge/tree/main/integrations/langchain), [package](https://pypi.org/project/databricks-langchain/)). |
+|-|
+
 This repository previously provided LangChain components to connect your LangChain application with various Databricks services.
 
 ## Deprecation Notice
