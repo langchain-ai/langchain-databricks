@@ -40,7 +40,7 @@ _NON_MANAGED_EMB_ONLY_MSG = (
 
 
 @deprecated(
-    since="0.1.2", removal="1.0", message="Use databricks_langchain.ChatDatabricks"
+    since="0.1.2", message="Use databricks_langchain.DatabricksVectorSearch"
 )
 class DatabricksVectorSearch(VectorStore):
     """Databricks vector store integration.

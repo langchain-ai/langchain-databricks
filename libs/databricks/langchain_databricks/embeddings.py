@@ -8,7 +8,7 @@ from langchain_databricks.utils import get_deployment_client
 
 
 @deprecated(
-    since="0.1.2", removal="1.0", message="Use databricks_langchain.ChatDatabricks"
+    since="0.1.2", message="Use databricks_langchain.DatabricksEmbeddings"
 )
 class DatabricksEmbeddings(Embeddings, BaseModel):
     """Databricks embedding model integration.

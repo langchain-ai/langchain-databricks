@@ -60,7 +60,7 @@ logger = logging.getLogger(__name__)
 
 
 @deprecated(
-    since="0.1.2", removal="1.0", message="Use databricks_langchain.ChatDatabricks"
+    since="0.1.2", message="Use databricks_langchain.ChatDatabricks"
 )
 class ChatDatabricks(BaseChatModel):
     """Databricks chat model integration.
