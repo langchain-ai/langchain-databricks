@@ -18,6 +18,7 @@ from typing import (
 )
 
 import numpy as np
+from langchain_core._api import deprecated
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_core.vectorstores import VST, VectorStore
@@ -38,6 +39,11 @@ _NON_MANAGED_EMB_ONLY_MSG = (
 )
 
 
+@deprecated(
+    since="0.1.2",
+    message="Use databricks_langchain.DatabricksVectorSearch",
+    removal="1.0.0",
+)
 class DatabricksVectorSearch(VectorStore):
     """Databricks vector store integration.
 

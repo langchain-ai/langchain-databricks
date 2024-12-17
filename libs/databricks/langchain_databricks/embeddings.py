@@ -1,11 +1,17 @@
 from typing import Any, Dict, Iterator, List
 
+from langchain_core._api import deprecated
 from langchain_core.embeddings import Embeddings
 from pydantic import BaseModel, PrivateAttr
 
 from langchain_databricks.utils import get_deployment_client
 
 
+@deprecated(
+    since="0.1.2",
+    message="Use databricks_langchain.DatabricksEmbeddings",
+    removal="1.0.0",
+)
 class DatabricksEmbeddings(Embeddings, BaseModel):
     """Databricks embedding model integration.
 

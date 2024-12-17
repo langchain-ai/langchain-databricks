@@ -1,81 +1,51 @@
-# 🦜️🔗 LangChain Databricks
+# 🦜️🔗 LangChain Databricks (Deprecated)
 
-This repository provides LangChain components to connect your LangChain application with various Databricks services.
+| Note: this package is deprecated in favor of the renamed `databricks-langchain` package ([repo](https://github.com/databricks/databricks-ai-bridge/tree/main/integrations/langchain), [package](https://pypi.org/project/databricks-langchain/)). |
+|-|
 
-## Features
+This repository previously provided LangChain components to connect your LangChain application with various Databricks services.
 
-- **🤖 LLMs**: The `ChatDatabricks` component allows you to access chat endpoints hosted on [Databricks Model Serving](https://www.databricks.com/product/model-serving), including state-of-the-art models such as Llama3, Mixtral, and DBRX, as well as your own fine-tuned models.
-- **📐 Vector Store**: [Databricks Vector Search](https://www.databricks.com/product/machine-learning/vector-search) is a serverless similarity search engine that allows you to store a vector representation of your data, including metadata, in a vector database. With Vector Search, you can create auto-updating vector search indexes from Delta tables managed by Unity Catalog and query them with a simple API to return the most similar vectors.
-- **🔢 Embeddings**: Provides components for working with embedding models hosted on [Databricks Model Serving](https://www.databricks.com/product/model-serving).
-- **📊 MLflow Integration**: LangChain Databricks components is fully integrated with [MLflow](https://python.langchain.com/docs/integrations/providers/mlflow_tracking/), providing various LLMOps capabilities such as experiment tracking, dependency management, evaluation, and tracing (observability).
+## Deprecation Notice
 
-**Note**: This repository will replace all Databricks integrations currently present in the `langchain-community` package. Users are encouraged to migrate to this repository as soon as possible.
+The `langchain-databricks` package is now deprecated in favor of the consolidated package [`databricks-langchain`](https://pypi.org/project/databricks-langchain/). Please update your dependencies to use `databricks-langchain` going forward.
 
-## Installation
+### Migration Guide
 
-You can install the `langchain-databricks` package from PyPI.
+#### What’s Changing?
 
-```bash
-pip install -U langchain-databricks
-```
+- All features previously provided by `langchain-databricks` are now available in `databricks-langchain`.
+- Future updates and new features will be released exclusively in `databricks-langchain`.
 
-If you are using this package outside Databricks workspace, you should configure credentials by setting the following environment variables:
+#### How to Migrate
 
-```bash
-export DATABRICKS_HOSTNAME="https://your-databricks-workspace"
-export DATABRICKS_TOKEN="your-personal-access-token"
-```
+1. **Install the new package:**
 
-Instead of personal access token (PAT), you can also use [OAuth M2M authentication](https://docs.databricks.com/en/dev-tools/auth/oauth-m2m.html#language-Environment):
+    ```bash
+    pip install databricks-langchain
+    ```
 
-```bash
-export DATABRICKS_HOSTNAME="https://your-databricks-workspace"
-export DATABRICKS_CLIENT_ID="your-service-principle-client-id"
-export DATABRICKS_CLIENT_SECRET="your-service-principle-secret"
-```
+2. **Update Imports:** Replace occurrences of `langchain_databricks` in your code with `databricks_langchain`. Example:
+   ```python
+   from databricks_langchain import ChatDatabricks
 
-## Chat Models
+   chat_model = ChatDatabricks(endpoint="databricks-meta-llama-3-70b-instruct")
+   response = chat_model.invoke("What is MLflow?")
+   print(response)
+   ```
 
-`ChatDatabricks` is a Chat Model class to access chat endpoints hosted on Databricks, including state-of-the-art models such as Llama3, Mixtral, and DBRX, as well as your own fine-tuned models.
+For more details, please refer to the [Langchain documentation](https://python.langchain.com/docs/integrations/providers/databricks/) and the [databricks-langchain package](https://pypi.org/project/databricks-langchain/). 
 
-```python
-from langchain_databricks import ChatDatabricks
+---
 
-chat_model = ChatDatabricks(endpoint="databricks-meta-llama-3-70b-instruct")
-chat_model.invoke("Sing a ballad of LangChain.")
-```
+## Contributing
 
-See the [usage example](https://python.langchain.com/docs/integrations/chat/databricks/) for more guidance on how to use it within your LangChain application.
+Contributions are now accepted in the `databricks-langchain` repository. Please refer to its [contribution guide](https://github.com/databricks/databricks-ai-bridge/tree/main/integrations/langchain) for more details.
 
-**Note**: The LLM class [Databricks](https://python.langchain.com/docs/integrations/llms/databricks/) still lives in the `langchain-community` library. However, this class will be deprecated in the future and it is recommended to use `ChatDatabricks` to get the latest features.
+---
 
-## Embeddings
+## License
 
-`DatabricksEmbeddings` is an Embeddings class to access text-embedding endpoints hosted on Databricks, including state-of-the-art models such as BGE, as well as your own fine-tuned models.
+This project was licensed under the [MIT License](LICENSE).
 
+Thank you for your support as we continue to improve Databricks integrations within LangChain!
 
-```python
-from langchain_databricks import DatabricksEmbeddings
-
-embeddings = DatabricksEmbeddings(endpoint="databricks-bge-large-en")
-```
-
-See the [usage example](https://python.langchain.com/docs/integrations/text_embedding/databricks) for more guidance on how to use it within your LangChain application.
-
-
-## Vector Search
-
-Databricks Vector Search is a serverless similarity search engine that allows you to store a vector representation of your data, including metadata, in a vector database. With Vector Search, you can create auto-updating vector search indexes from [Delta](https://docs.databricks.com/en/introduction/delta-comparison.html) tables managed by [Unity Catalog](https://www.databricks.com/product/unity-catalog) and query them with a simple API to return the most similar vectors.
-
-```python
-from langchain_databricks.vectorstores import DatabricksVectorSearch
-
-dvs = DatabricksVectorSearch(
-    index_name="<YOUR_INDEX_NAME>",
-    text_column="text",
-    columns=["source"]
-)
-docs = dvs.similarity_search("What is vector search?")
-```
-
-See the [usage example](https://python.langchain.com/docs/integrations/vectorstores/databricks_vector_search) for how to set up vector indices and integrate them with LangChain.

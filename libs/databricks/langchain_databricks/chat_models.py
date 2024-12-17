@@ -17,6 +17,7 @@ from typing import (
     Union,
 )
 
+from langchain_core._api import deprecated
 from langchain_core.callbacks import CallbackManagerForLLMRun
 from langchain_core.language_models import BaseChatModel
 from langchain_core.language_models.base import LanguageModelInput
@@ -58,6 +59,9 @@ from langchain_databricks.utils import get_deployment_client
 logger = logging.getLogger(__name__)
 
 
+@deprecated(
+    since="0.1.2", message="Use databricks_langchain.ChatDatabricks", removal="1.0.0"
+)
 class ChatDatabricks(BaseChatModel):
     """Databricks chat model integration.
 
